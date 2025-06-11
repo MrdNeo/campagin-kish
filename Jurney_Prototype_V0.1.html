@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کمپین سفر تابستانه - وب‌پوش</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Import Vazirmatn font for a modern Persian look, similar to Iran Sans */
+        /* If you have a specific CDN for Iran Sans, you can replace this. */
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f7fafc; /* Light gray background */
+            direction: rtl; /* Ensure right-to-left layout */
+            text-align: right; /* Align text to the right for RTL */
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .hero-background {
+            /* Minimal island background image */
+            background-image: url('header.png'); /* Updated: Your specified header image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 500px; /* Adjusted height for more focus on content */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* Removed the transparent overlay background as requested */
+            z-index: -1;
+            border-radius: 0.75rem; /* rounded-xl from Tailwind */
+            margin: 1rem; /* m-4 from Tailwind */
+        }
+
+        /* Spin wheel canvas styles - kept vibrant for excitement */
+        #spinWheelCanvas {
+            border: 5px solid #FFD700; /* Gold border */
+            border-radius: 50%;
+            display: block;
+            margin: 20px auto;
+            background-color: #f0f0f0;
+        }
+
+        /* Button styles - subtle gradient for flat aesthetic */
+        .btn-primary {
+            @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition duration-300 ease-in-out transform hover:scale-105;
+        }
+        .btn-secondary {
+            /* Removed hover background and transform for no visual trace on hover */
+            @apply bg-transparent text-blue-600 font-bold py-2 px-4 rounded-lg transition duration-300;
+        }
+        .input-field {
+            @apply w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200;
+        }
+        .card {
+            @apply bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300; /* Slightly reduced shadow for flatness */
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center px-4 md:px-0">
+            <!-- Webpoosh Logo -->
+            <img src="لوگو فارسی.png" alt="لوگوی وب‌پوش" class="h-10 w-auto">
+            <nav>
+                <a href="#register-section" class="btn-secondary hidden sm:inline-block">ثبت‌نام در کمپین</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-background text-center text-white relative">
+        <!-- The button now acts as an invisible overlay, covering the entire hero background. -->
+        <!-- Its `onclick` event will scroll to the registration section and focus the mobile input. -->
+        <button onclick="scrollToRegisterAndFocusMobile();"
+                class="absolute inset-0 w-full h-full bg-transparent border-none cursor-pointer flex items-center justify-center text-transparent hover:bg-black hover:bg-opacity-10 transition duration-300 rounded-xl m-4">
+                <!-- No text or icon inside the button as per request. The image itself is the call to action. -->
+        </button>
+    </section>
+
+    <!-- Registration Section - Moved to top for "Mobile First" approach and direct access -->
+    <section id="register-section" class="py-12 bg-white">
+        <div class="container mx-auto px-4 md:px-0">
+            <h3 class="text-3xl font-extrabold text-center text-blue-700 mb-8">آماده‌ای برای سفر؟</h3>
+            <div id="registrationForm" class="max-w-md mx-auto card p-6">
+                <p class="text-center text-gray-600 mb-4 text-sm">اطلاعاتت رو وارد کن و شانس برنده شدن رو داشته باش!</p>
+                <form onsubmit="handleRegistration(event)">
+                    <div class="mb-3">
+                        <label for="mobile" class="block text-gray-700 text-sm font-semibold mb-1">شماره موبایل:</label>
+                        <input type="tel" id="mobile" name="mobile" class="input-field" placeholder="مثال: 09123456789" required pattern="09[0-9]{9}" title="شماره موبایل باید با 09 شروع شود و ۱۱ رقم باشد.">
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="block text-gray-700 text-sm font-semibold mb-1">نام:</label>
+                        <input type="text" id="name" name="name" class="input-field" placeholder="نام" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="family" class="block text-gray-700 text-sm font-semibold mb-1">نام خانوادگی:</label>
+                        <input type="text" id="family" name="family" class="input-field" placeholder="نام خانوادگی" required>
+                    </div>
+                    <div class="mb-4 flex items-center">
+                        <input type="checkbox" id="terms" name="terms" class="h-4 w-4 text-blue-600 rounded mr-2" required>
+                        <label for="terms" class="text-gray-700 text-xs">
+                            با <a href="#" class="text-blue-600 hover:underline">شرایط و قوانین</a> موافقم.
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary w-full">
+                        ثبت‌نام و چرخاندن گردونه <i class="fas fa-play-circle mr-2"></i>
+                    </button>
+                </form>
+                <div id="messageBox" class="mt-3 p-2 rounded-lg text-white text-sm hidden"></div>
+            </div>
+
+            <!-- Spin the Wheel Section (Initially Hidden) -->
+            <div id="spinWheelSection" class="hidden max-w-md mx-auto card p-6 text-center mt-8">
+                <h3 class="text-3xl font-extrabold text-blue-700 mb-6">تبریک! حالا گردونه رو بچرخون!</h3>
+                <canvas id="spinWheelCanvas" width="300" height="300"></canvas> <!-- Smaller canvas for mobile first -->
+                <button id="spinButton" class="btn-primary mt-4">
+                    بچرخون <i class="fas fa-star mr-2"></i>
+                </button>
+                <p id="wheelResult" class="text-2xl font-bold text-green-700 mt-6 hidden">
+                    تبریک! شما برنده <span id="rewardAmount"></span> اعتبار شدید!
+                </p>
+                <p id="wheelInstructions" class="text-gray-600 mt-2 text-sm">
+                    اعتبار فوراً به پروفایل باشگاه مشتریان شما اضافه می‌شود.
+                </p>
+                <button onclick="window.location.reload();" class="btn-secondary mt-6">
+                    ثبت‌نام جدید <i class="fas fa-redo mr-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-12 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-3xl font-extrabold text-blue-700 mb-10">چطور شرکت کنی؟</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Step 1: Scan QR Code -->
+                <div class="card flex flex-col items-center p-4">
+                    <div class="bg-blue-200 text-blue-700 rounded-full w-16 h-16 flex items-center justify-center mb-4 text-3xl">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2 text-gray-900">۱. اسکن QR کد</h4>
+                    <p class="text-gray-600 text-sm">پوستر کمپین رو اسکن کن.</p>
+                </div>
+                <!-- Step 2: Register -->
+                <div class="card flex flex-col items-center p-4">
+                    <div class="bg-green-200 text-green-700 rounded-full w-16 h-16 flex items-center justify-center mb-4 text-3xl">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2 text-gray-900">۲. ثبت‌نام</h4>
+                    <p class="text-gray-600 text-sm">اطلاعاتت رو وارد کن.</p>
+                </div>
+                <!-- Step 3: Spin the Wheel -->
+                <div class="card flex flex-col items-center p-4">
+                    <div class="bg-yellow-200 text-yellow-700 rounded-full w-16 h-16 flex items-center justify-center mb-4 text-3xl">
+                        <i class="fas fa-dice"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2 text-gray-900">۳. گردونه شانس</h4>
+                    <p class="text-gray-600 text-sm">اعتبار هدیه دریافت کن.</p>
+                </div>
+                <!-- Step 4: Increase Chances -->
+                <div class="card flex flex-col items-center p-4">
+                    <div class="bg-purple-200 text-purple-700 rounded-full w-16 h-16 flex items-center justify-center mb-4 text-3xl">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2 text-gray-900">۴. شانس بیشتر</h4>
+                    <p class="text-gray-600 text-sm">با خرید، شانس قرعه‌کشی بیشتر بگیر.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prizes Section -->
+    <section class="py-12 bg-gradient-to-br from-indigo-50 to-purple-100">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-3xl font-extrabold text-purple-700 mb-10">جوایز هیجان‌انگیز</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Main Prize -->
+                <div class="card flex flex-col items-center p-4">
+                    <div class="bg-yellow-200 text-yellow-700 rounded-full w-16 h-16 flex items-center justify-center mb-4 text-3xl">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold mb-2 text-gray-900">سفر به کیش!</h4>
+                    <p class="text-gray-600 text-base">یک کمک‌هزینه ۲۰ میلیونی (۱ نفر)</p>
+                </div>
+                <!-- Eco-tourism Prizes -->
+                <div class="card flex flex-col items-center p-4">
+                    <div class="bg-teal-200 text-teal-700 rounded-full w-16 h-16 flex items-center justify-center mb-4 text-3xl">
+                        <i class="fas fa-mountain"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold mb-2 text-gray-900">مقاصد بوم‌گردی</h4>
+                    <p class="text-gray-600 text-base">۵ کمک‌هزینه ۱۰ میلیونی (۵ نفر)</p>
+                </div>
+                <!-- Initial Credit Prize -->
+                <div class="card flex flex-col items-center p-4">
+                    <div class="bg-red-200 text-red-700 rounded-full w-16 h-16 flex items-center justify-center mb-4 text-3xl">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold mb-2 text-gray-900">اعتبار اولیه</h4>
+                    <p class="text-gray-600 text-base">۱۰۰ تا ۴۰۰ هزار تومان اعتبار با گردونه شانس!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Important Dates Section -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4 md:px-0">
+            <h3 class="text-3xl font-extrabold text-center text-blue-700 mb-10">تاریخ‌های مهم</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card p-4">
+                    <h4 class="text-xl font-bold text-gray-900 mb-3 flex items-center"><i class="fas fa-calendar-alt mr-3 text-blue-500"></i>پایان مهلت اعتبار و شانس:</h4>
+                    <p class="text-gray-700 text-base">۱۷ مرداد ماه</p>
+                </div>
+                <div class="card p-4">
+                    <h4 class="text-xl font-bold text-gray-900 mb-3 flex items-center"><i class="fas fa-calendar-check mr-3 text-blue-500"></i>تاریخ قرعه‌کشی:</h4>
+                    <p class="text-gray-700 text-base">۲۵ مرداد ماه</p>
+                </div>
+                <div class="card md:col-span-2 p-4">
+                    <h4 class="text-xl font-bold text-gray-900 mb-3 flex items-center"><i class="fas fa-info-circle mr-3 text-blue-500"></i>افزایش شانس قرعه‌کشی:</h4>
+                    <p class="text-gray-700 text-base">با هر ۲۰۰ هزار تومان خرید، ۱ شانس اضافه دریافت کن!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <h4 class="text-xl font-bold mb-3">وب‌پوش</h4>
+            <p class="text-gray-400 mb-4 text-sm">
+                © 2025 تمامی حقوق محفوظ است.
+            </p>
+            <div class="flex justify-center space-x-4 rtl:space-x-reverse">
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                    <i class="fab fa-instagram text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                    <i class="fab fa-telegram-plane text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                    <i class="fab fa-twitter text-xl"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Function to scroll to registration and focus mobile input
+        function scrollToRegisterAndFocusMobile() {
+            const registerSection = document.getElementById('register-section');
+            if (registerSection) {
+                registerSection.scrollIntoView({ behavior: 'smooth' });
+                // A small delay might be necessary to ensure scrolling is complete before focusing
+                setTimeout(() => {
+                    const mobileInput = document.getElementById('mobile');
+                    if (mobileInput) {
+                        mobileInput.focus();
+                    }
+                }, 300); // Short delay to allow smooth scroll to finish
+            }
+        }
+
+        // Get references to DOM elements
+        const registrationFormDiv = document.getElementById('registrationForm');
+        const spinWheelSection = document.getElementById('spinWheelSection');
+        const spinButton = document.getElementById('spinButton');
+        const wheelResult = document.getElementById('wheelResult');
+        const rewardAmountSpan = document.getElementById('rewardAmount');
+        const messageBox = document.getElementById('messageBox');
+        const canvas = document.getElementById('spinWheelCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Spin wheel configuration
+        const segments = [
+            { text: "100 هزار تومان", color: "#FFC107", value: 100 },
+            { text: "200 هزار تومان", color: "#4CAF50", value: 200 },
+            { text: "300 هزار تومان", color: "#2196F3", value: 300 },
+            { text: "400 هزار تومان", color: "#9C27B0", value: 400 }, // New segment for 400
+            { text: "100 هزار تومان", color: "#FFC107", value: 100 },
+            { text: "200 هزار تومان", color: "#4CAF50", value: 200 },
+            { text: "300 هزار تومان", color: "#2196F3", value: 300 },
+            { text: "400 هزار تومان", color: "#9C27B0", value: 400 }  // New segment for 400
+        ];
+        // Re-calculate arc based on new number of segments
+        const arc = Math.PI / (segments.length / 2);
+        let startAngle = 0;
+        let spinTime = 0;
+        let spinTimeTotal = 0;
+        let spinAngleStart = 0;
+        let spinTimeout = null;
+        let isSpinning = false;
+
+        // Function to draw the wheel
+        function drawWheel() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+            for (let i = 0; i < segments.length; i++) {
+                const angle = startAngle + i * arc;
+                ctx.beginPath();
+                ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, angle, angle + arc, false);
+                ctx.lineTo(canvas.width / 2, canvas.height / 2);
+                ctx.fillStyle = segments[i].color;
+                ctx.fill();
+                ctx.save();
+                ctx.translate(canvas.width / 2 + Math.cos(angle + arc / 2) * (canvas.width / 2 - 30),
+                            canvas.height / 2 + Math.sin(angle + arc / 2) * (canvas.width / 2 - 30));
+                ctx.rotate(angle + arc / 2 + Math.PI / 2); // Rotate text correctly
+                ctx.fillStyle = "#FFFFFF";
+                ctx.font = "bold 16px Vazirmatn"; // Adjusted font size for smaller canvas
+                ctx.textAlign = "center";
+                ctx.fillText(segments[i].text, 0, 0);
+                ctx.restore();
+            }
+
+            // Draw the spinner pointer
+            ctx.beginPath();
+            ctx.moveTo(canvas.width / 2 - 10, canvas.height / 2 - (canvas.width / 2));
+            ctx.lineTo(canvas.width / 2 + 10, canvas.height / 2 - (canvas.width / 2));
+            ctx.lineTo(canvas.width / 2, canvas.height / 2 - (canvas.width / 2) + 20);
+            ctx.fillStyle = "#FF0000"; // Red pointer
+            ctx.fill();
+            ctx.strokeStyle = "#000000";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // Function to ease out the spin animation
+        function easeOut(t, b, c, d) {
+            let ts = (t /= d) * t;
+            let tc = ts * t;
+            return b + c * (tc * ts + -5 * ts * ts + 10 * tc + -10 * ts + 5 * t);
+        }
+
+        // Animation loop for the wheel
+        function animateWheel() {
+            spinTime += 30;
+            if (spinTime >= spinTimeTotal) {
+                stopSpin();
+                return;
+            }
+            const spinAngle = spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
+            startAngle += (spinAngle * Math.PI / 180);
+            drawWheel();
+            spinTimeout = setTimeout(animateWheel, 30);
+        }
+
+        // Function to start the spin
+        function startSpin() {
+            if (isSpinning) return; // Prevent multiple spins
+            isSpinning = true;
+            spinButton.disabled = true; // Disable button during spin
+            wheelResult.classList.add('hidden'); // Hide previous result
+
+            spinTime = 0;
+            // Random spin duration (e.g., 3-6 seconds)
+            spinTimeTotal = Math.random() * 3000 + 3000;
+            // Random end angle (e.g., 2-10 full rotations)
+            spinAngleStart = Math.random() * (360 * 8) + (360 * 2);
+
+            animateWheel();
+        }
+
+        // Function to stop the spin and show result
+        function stopSpin() {
+            clearTimeout(spinTimeout);
+            isSpinning = false;
+            spinButton.disabled = false; // Enable button after spin
+
+            const degrees = startAngle * 180 / Math.PI + 90; // Adjust for pointer position
+            const arcd = arc * 180 / Math.PI;
+            const index = Math.floor((360 - degrees % 360) / arcd);
+            const prize = segments[index];
+
+            rewardAmountSpan.textContent = prize.text;
+            wheelResult.classList.remove('hidden');
+
+            // Simulate sending data to backend (e.g., update user profile)
+            console.log(`User won: ${prize.value} Toman. This should be added to their profile.`);
+        }
+
+        // Initial draw of the wheel
+        drawWheel();
+
+        // Event listener for spin button
+        spinButton.addEventListener('click', startSpin);
+
+        // Handle registration form submission
+        function handleRegistration(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const mobile = document.getElementById('mobile').value;
+            const name = document.getElementById('name').value;
+            const family = document.getElementById('family').value;
+            const termsAccepted = document.getElementById('terms').checked;
+
+            if (!mobile || !name || !family || !termsAccepted) {
+                showMessage('لطفاً تمامی فیلدها را پر کرده و با شرایط کمپین موافقت کنید.', 'bg-red-500');
+                return;
+            }
+
+            // Basic mobile number validation (starts with 09 and 11 digits)
+            const mobileRegex = /^09[0-9]{9}$/;
+            if (!mobileRegex.test(mobile)) {
+                showMessage('شماره موبایل نامعتبر است. باید با 09 شروع شود و ۱۱ رقم باشد.', 'bg-red-500');
+                return;
+            }
+
+            // Simulate SMS verification (in a real app, this would involve a backend call)
+            showMessage('کد تایید به شماره شما ارسال شد. (در این نسخه، کد تایید شبیه‌سازی می‌شود)', 'bg-yellow-500');
+
+            // Simulate successful registration after a short delay
+            setTimeout(() => {
+                showMessage('ثبت‌نام شما با موفقیت انجام شد! حالا گردونه شانس رو بچرخون.', 'bg-green-500');
+                registrationFormDiv.classList.add('hidden'); // Hide registration form
+                spinWheelSection.classList.remove('hidden'); // Show spin wheel section
+                document.getElementById('spinWheelSection').scrollIntoView({ behavior: 'smooth' });
+            }, 2000); // Simulate network delay
+        }
+
+        // Function to display messages in the message box
+        function showMessage(msg, bgColorClass) {
+            messageBox.textContent = msg;
+            messageBox.className = `mt-3 p-2 rounded-lg text-white text-sm ${bgColorClass}`; /* Smaller font for messages */
+            messageBox.classList.remove('hidden');
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 5000); // Hide message after 5 seconds
+        }
+    </script>
+</body>
+</html>
